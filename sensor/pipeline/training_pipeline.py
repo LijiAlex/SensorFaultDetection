@@ -26,10 +26,11 @@ class TrainPipeline:
     def start_data_validaton(self,data_ingestion_artifact:DataIngestionArtifact)->DataValidationArtifact:
         try:
             data_validation_config = DataValidationConfig(training_pipeline_config=self.training_pipeline_config)
+            logging.info(f"\nData validation started with config:{data_validation_config.__dict__}")
             data_validation = DataValidation(data_ingestion_artifact=data_ingestion_artifact,
-            data_validation_config = data_validation_config
-            )
+            data_validation_config = data_validation_config)
             data_validation_artifact = data_validation.initiate_data_validation()
+            logging.info(f"Data validation completed and artifact: {data_validation_artifact}\n")
             return data_validation_artifact
         except  Exception as e:
             raise  SensorException(e,sys)
@@ -37,7 +38,7 @@ class TrainPipeline:
     def run_pipeline(self):
         try:
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
-            # data_validation_artifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
+            data_validation_artifact:DataValidationArtifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
             # data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
         except  Exception as e:
             raise  SensorException(e,sys)

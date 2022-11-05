@@ -53,9 +53,11 @@ class DataValidation:
             raise SensorException(e,sys)      
 
     def detect_dataset_drift(self,base_df,current_df,threshold=0.05)->bool:
+        logging.info("Checking for data drift")
         try:
-            status=True
-            report ={}
+            status=False
+            report = {}
+            data_drift_columns = []
             for column in base_df.columns:
                 d1 = base_df[column]
                 d2  = current_df[column]
@@ -64,7 +66,8 @@ class DataValidation:
                     is_found=False
                 else:
                     is_found = True 
-                    status=False
+                    data_drift_columns.append(column)
+                    status=True
                 report.update({column:{
                     "p_value":float(is_same_dist.pvalue),
                     "drift_status":is_found
@@ -77,6 +80,8 @@ class DataValidation:
             dir_path = os.path.dirname(drift_report_file_path)
             os.makedirs(dir_path,exist_ok=True)
             write_yaml_file(file_path=drift_report_file_path,content=report,)
+
+            logging.info(f"Data drift: {status}, Data drift columns: {data_drift_columns}. Report generated at {drift_report_file_path}")
             return status
         except Exception as e:
             raise SensorException(e,sys)
@@ -93,29 +98,34 @@ class DataValidation:
             test_dataframe = pd.read_csv(test_file_path)
 
             #Validate number of columns
+            logging.info("Validate no. of columns for train dataframe")
             status = self.validate_number_of_columns(dataframe=train_dataframe)
             if not status:
                 error_message=f"{error_message}Train dataframe does not contain all columns.\n"
+            logging.info("Validate no. of columns for test dataframe")
             status = self.validate_number_of_columns(dataframe=test_dataframe)
             if not status:
                 error_message=f"{error_message}Test dataframe does not contain all columns.\n"
         
 
             #Validate numerical columns
-
+            logging.info("Validate if numerical columns are missing for train dataframe")
             status = self.is_numerical_column_exist(dataframe=train_dataframe)
             if not status:
                 error_message=f"{error_message}Train dataframe does not contain all numerical columns.\n"
             
+            logging.info("Validate if numerical columns are missing for test dataframe")
             status = self.is_numerical_column_exist(dataframe=test_dataframe)
             if not status:
                 error_message=f"{error_message}Test dataframe does not contain all numerical columns.\n"
             
             if len(error_message)>0:
-                raise Exception(error_message)
+                raise SensorException(error_message)
 
-            #Let check data drift
+            # Check data drift
             status = self.detect_dataset_drift(base_df=train_dataframe,current_df=test_dataframe)
+
+            # won't stop execution due to data drift
 
             data_validation_artifact = DataValidationArtifact(
                 validation_status=status,
@@ -124,10 +134,7 @@ class DataValidation:
                 invalid_train_file_path=None,
                 invalid_test_file_path=None,
                 drift_report_file_path=self.data_validation_config.drift_report_file_path,
-            )
-
-            logging.info(f"Data validation artifact: {data_validation_artifact}")
-
+            )            
             return data_validation_artifact
         except Exception as e:
             raise SensorException(e,sys)
