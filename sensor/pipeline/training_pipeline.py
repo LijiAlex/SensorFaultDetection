@@ -1,9 +1,10 @@
 import sys
 
-from sensor.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig
-from sensor.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
+from sensor.entity.config_entity import *
+from sensor.entity.artifact_entity import *
 from sensor.component.data_validation import DataValidation
 from sensor.component.data_ingestion import DataIngestion
+from sensor.component.data_transformation import DataTransformation
 from sensor.exception import SensorException
 from sensor.logger import logging
 
@@ -35,10 +36,22 @@ class TrainPipeline:
         except  Exception as e:
             raise  SensorException(e,sys)
 
+    def start_data_transformation(self,data_validation_artifact:DataValidationArtifact)->DataTransformationArtifact:
+        try:
+            data_transformation_config = DataTransformationConfig(training_pipeline_config=self.training_pipeline_config)
+            logging.info(f"\nData transformation started with config:{data_transformation_config.__dict__}")
+            data_transformation = DataTransformation(data_validation_artifact=data_validation_artifact,
+            data_transformation_config=data_transformation_config)
+            data_transformation_artifact =  data_transformation.initiate_data_transformation()
+            logging.info(f"Data transformation completed and artifact: {data_transformation_artifact}\n")
+            return data_transformation_artifact
+        except  Exception as e:
+            raise  SensorException(e,sys)
+
     def run_pipeline(self):
         try:
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
             data_validation_artifact:DataValidationArtifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
-            # data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
+            data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
         except  Exception as e:
             raise  SensorException(e,sys)

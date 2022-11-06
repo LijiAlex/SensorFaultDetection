@@ -11,3 +11,6 @@ In this project, the system in focus is the Air Pressure system (APS) which gene
 
 The problem is to reduce the cost due to unnecessary repairs. So it is required to minimize the false predictions.
 
+## Strategies
+* Drop columns with more than 70% missing values
+

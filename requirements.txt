@@ -3,4 +3,9 @@ numpy
 pandas
 scikit-learn==1.1.3
 PyYAML
+seaborn
+xgboost
+catboost
+imblearn
+dill
 -e .
