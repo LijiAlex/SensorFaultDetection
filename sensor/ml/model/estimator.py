@@ -1,5 +1,8 @@
 from sensor.constant.training_pipeline import SAVED_MODEL_DIR,MODEL_FILE_NAME
+from sensor.logger import logging
+
 import os
+
 class TargetValueMapping:
     def __init__(self):
         self.neg: int = 0
@@ -39,7 +42,7 @@ class ModelResolver:
         except Exception as e:
             raise e
 
-    def get_best_model_path(self,)->str:
+    def get_latest_model_path(self,)->str:
         try:
             timestamps = list(map(int,os.listdir(self.model_dir)))
             latest_timestamp = max(timestamps)
@@ -49,6 +52,7 @@ class ModelResolver:
             raise e
 
     def is_model_exists(self)->bool:
+        logging.info(f"Checking if other model exists at {self.model_dir}")
         try:
             if not os.path.exists(self.model_dir):
                 return False
@@ -57,7 +61,7 @@ class ModelResolver:
             if len(timestamps)==0:
                 return False
             
-            latest_model_path = self.get_best_model_path()
+            latest_model_path = self.get_latest_model_path()
 
             if not os.path.exists(latest_model_path):
                 return False
