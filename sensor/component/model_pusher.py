@@ -33,13 +33,10 @@ class ModelPusher:
             logging.info(f"Copy {trained_model_path} to {model_file_path}")
 
             #saved model dir
-            if self.model_eval_artifact.is_model_accepted:
-                saved_model_path = self.model_pusher_config.saved_model_path
-                os.makedirs(os.path.dirname(saved_model_path),exist_ok=True)
-                shutil.copy(src=trained_model_path, dst=saved_model_path)
-                logging.info(f"Copy {trained_model_path} to {saved_model_path}")
-            else:
-                saved_model_path = None
+            saved_model_path = self.model_pusher_config.saved_model_path
+            os.makedirs(os.path.dirname(saved_model_path),exist_ok=True)
+            shutil.copy(src=trained_model_path, dst=saved_model_path)
+            logging.info(f"Copy {trained_model_path} to {saved_model_path}")
 
             #prepare artifact
             model_pusher_artifact = ModelPusherArtifact(saved_model_path=saved_model_path, model_file_path=model_file_path)
