@@ -7,6 +7,7 @@ from sensor.component.data_ingestion import DataIngestion
 from sensor.component.data_transformation import DataTransformation
 from sensor.component.model_trainer import ModelTrainer
 from sensor.component.model_evaluation import ModelEvaluation
+from sensor.component.model_pusher import ModelPusher
 from sensor.exception import SensorException
 from sensor.logger import logging
 
@@ -72,6 +73,17 @@ class TrainPipeline:
         except  Exception as e:
             raise  SensorException(e,sys)
 
+    def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
+        try:
+            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+            logging.info(f"\nModel pusher started with config:{model_pusher_config.__dict__}")
+            model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            logging.info(f"Model pusher completed and artifact: {model_pusher_artifact}\n")
+            return model_pusher_artifact
+        except  Exception as e:
+            raise  SensorException(e,sys)
+
     def run_pipeline(self):
         try:
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
@@ -79,5 +91,7 @@ class TrainPipeline:
             data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
             model_eval_artifact = self.start_model_evaluation(data_validation_artifact, model_trainer_artifact)
+            model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
         except  Exception as e:
             raise  SensorException(e,sys)
+
