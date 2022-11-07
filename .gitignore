@@ -10,6 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
+saved_models/
 dist/
 artifact/
 downloads/
