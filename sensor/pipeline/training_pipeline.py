@@ -116,9 +116,12 @@ class TrainPipeline:
                 raise Exception("Trained model is not better than the best model")
             model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
             TrainPipeline.is_pipeline_running=False
+            logging.info("Sync artifact dir to S3")
             self.sync_artifact_dir_to_s3()
+            logging.info("Sync saved model dir to S3")
             self.sync_saved_model_dir_to_s3()
         except  Exception as e:
+            logging.info("Sync artifact dir to S3")
             self.sync_artifact_dir_to_s3()
             TrainPipeline.is_pipeline_running=False
             raise  SensorException(e,sys)
