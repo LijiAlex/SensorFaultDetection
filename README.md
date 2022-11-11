@@ -13,4 +13,10 @@ The problem is to reduce the cost due to unnecessary repairs. So it is required 
 
 ## Strategies
 * Drop columns with more than 70% missing values
+* Scaling the data using Robust scaler
+* KNN Imputer for missing values
+* SMOTETomek for handling imbalanced data
+* XGboost classifier for training. Accuracy>95% Cost:minimal
+
+# 
 

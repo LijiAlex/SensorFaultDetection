@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+Notebook/
 development_logs/
 develop-eggs/
 saved_models/
