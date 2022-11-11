@@ -85,14 +85,15 @@ class PredictionDataValidation:
             raise SensorException(e,sys)
 
     def get_base_dataframe(self):
-        artifact_list = os.listdir(rf"{ARTIFACT_DIR}/")
-        artifact_list.sort(reverse=True)
-        latest_artifact_dir = artifact_list[0]
-        latest_artifact_dir_path = os.path.join(ARTIFACT_DIR, latest_artifact_dir)
-        train_file = os.path.join(latest_artifact_dir_path, DATA_INGESTION_DIR_NAME, DATA_INGESTION_INGESTED_DIR, TRAIN_FILE_NAME)
-        return pd.read_csv(train_file)
-
-   
+        try:
+            artifact_list = os.listdir(rf"{ARTIFACT_DIR}/")
+            artifact_list.sort(reverse=True)
+            latest_artifact_dir = artifact_list[0]
+            latest_artifact_dir_path = os.path.join(ARTIFACT_DIR, latest_artifact_dir)
+            train_file = os.path.join(latest_artifact_dir_path, DATA_INGESTION_DIR_NAME, DATA_INGESTION_INGESTED_DIR, TRAIN_FILE_NAME)
+            return pd.read_csv(train_file)
+        except Exception as e:
+            raise SensorException(e,sys)   
 
     def initiate_data_validation(self):
         try:

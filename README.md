@@ -18,5 +18,17 @@ The problem is to reduce the cost due to unnecessary repairs. So it is required 
 * SMOTETomek for handling imbalanced data
 * XGboost classifier for training. Accuracy>95% Cost:minimal
 
-# 
+## Tech Stack Used
+1. Python 
+2. FastAPI 
+3. Machine learning algorithms
+4. Docker
+5. MongoDB
+
+## Infrastructure Required.
+
+1. AWS S3
+2. AWS EC2
+3. AWS ECR
+4. Git Actions
 
