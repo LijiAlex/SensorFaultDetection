@@ -33,10 +33,10 @@ The problem is to reduce the cost due to unnecessary repairs. So it is required 
 4. Git Actions
 
 ## Data Collections
-<img width="397" alt="Data Collections" src="https://user-images.githubusercontent.com/59106185/201272285-8dccf265-680a-4d1b-940a-b4f59ceafd0a.png">
+![data collections](https://user-images.githubusercontent.com/59106185/201272285-8dccf265-680a-4d1b-940a-b4f59ceafd0a.png)
 
 ## Project Architecture
 ![project architecture](https://user-images.githubusercontent.com/59106185/201272669-cce9984f-f30a-46c7-9677-2b14c6bbd11f.png)
 
 ## Deployment Architecture
-<img width="426" alt="deployment architecture" src="https://user-images.githubusercontent.com/59106185/201272727-f5e4a537-ca6a-43ed-8288-93d8b5aedc82.png">
+![deployment architecture](https://user-images.githubusercontent.com/59106185/201272727-f5e4a537-ca6a-43ed-8288-93d8b5aedc82.png)
