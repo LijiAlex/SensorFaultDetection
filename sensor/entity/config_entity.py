@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-from sensor.constant import training_pipeline
+from sensor.constant import training_pipeline, s3_bucket, prediction_pipeline
 
 class TrainingPipelineConfig:
 
@@ -88,3 +88,15 @@ class ModelPusherConfig:
             training_pipeline.SAVED_MODEL_DIR,
             f"{timestamp}",
             training_pipeline.MODEL_FILE_NAME)
+
+class PredictionPipelineConfig:
+    def __init__(self, timestamp=datetime.now()):
+        """
+        Initiate the configurations for prediction pipeline
+        """
+        self.timestamp:str = timestamp.strftime("%m_%d_%Y_%H_%M_%S")
+        self.prediction_artifact_dir: str = os.path.join(prediction_pipeline.PREDICTION_ARTIFACT_DIR, self.timestamp)
+        self.input_dir = os.path.join(self.prediction_artifact_dir, prediction_pipeline.PREDICTION_INPUT_FOLDER)
+        self.output_dir = os.path.join(self.prediction_artifact_dir, prediction_pipeline.PREDICTION_OUTPUT_FOLDER)
+        self.drift_report_file_path = os.path.join(self.prediction_artifact_dir, prediction_pipeline.PREDICTION_DRIFT_REPORT_FOLDER, prediction_pipeline.PREDICTION_DRIFT_REPORT_NAME)
+        

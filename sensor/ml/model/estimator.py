@@ -52,7 +52,7 @@ class ModelResolver:
             raise e
 
     def is_model_exists(self)->bool:
-        logging.info(f"Checking if other model exists at {self.model_dir}")
+        logging.info(f"Checking if model exists at {self.model_dir}")
         try:
             if not os.path.exists(self.model_dir):
                 return False

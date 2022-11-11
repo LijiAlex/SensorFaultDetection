@@ -1,2 +1,2 @@
 TRAINING_BUCKET_NAME = "sensor-training"
-PREDICTION_BUCKET_NAME = "sensor-datasource"
+PREDICTION_BUCKET_NAME = "sensor-prediction"

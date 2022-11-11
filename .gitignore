@@ -9,8 +9,10 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+development_logs/
 develop-eggs/
 saved_models/
+prediction_artifact/
 dist/
 artifact/
 downloads/

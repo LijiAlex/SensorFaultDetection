@@ -5,10 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
 from sensor.pipeline.training_pipeline import TrainPipeline
+from sensor.pipeline.prediction_pipeline import PredictionPipeline
 from sensor.logger import logging
-from sensor.ml.model.estimator import ModelResolver, TargetValueMapping
-from sensor.constant.training_pipeline import SAVED_MODEL_DIR
-from sensor.utils.main_utils import load_object
 from sensor.constant.application import *
 
 
@@ -40,38 +38,26 @@ async def train_route():
     except Exception as e:
         return Response(f"Error Occurred! {e}")
 
-@app.get("/predict")
-async def predict_route():
+@app.get("/predict/{path:path}")
+async def predict_route(path):
     try:
-        #get data from user csv file
-        #conver csv file to dataframe
-
-        df=None
-        model_resolver = ModelResolver(model_dir=SAVED_MODEL_DIR)
-        if not model_resolver.is_model_exists():
-            return Response("Model is not available")
-        
-        best_model_path = model_resolver.get_latest_model_path()
-        model = load_object(file_path=best_model_path)
-        y_pred = model.predict(df)
-        df['predicted_column'] = y_pred
-        df['predicted_column'].replace(TargetValueMapping().reverse_mapping(),inplace=True)
-        
-        #decide how to return file to user.
-        
+        prediction_pipeline = PredictionPipeline(path)
+        msg = prediction_pipeline.run_pipeline()
+        return Response(msg)
     except Exception as e:
-        raise Response(f"Error Occured! {e}")
+        return Response(f"Error Occurred! {e}")
 
 def main():
     try:
-        training_pipeline = TrainPipeline()
-        training_pipeline.run_pipeline()
+        path:str = r"https://raw.githubusercontent.com/LijiAlex/Datasets/main/sensor5898273.csv"
+        prediction_pipeline = PredictionPipeline(path)
+        msg = prediction_pipeline.run_pipeline()
+        print(msg)
     except Exception as e:
         print(e)
-        logging.exception(e)
 
 
 if __name__=="__main__":
-    # main()
+    main()
     # set_env_variable(env_file_path)
-    app_run(app, host=APP_HOST, port=APP_PORT)
+    # app_run(app, host=APP_HOST, port=APP_PORT)
